@@ -1,0 +1,33 @@
+
+直接上代码：
+
+@property (weak, nonatomic) IBOutlet UIImageView *userHead;
+@property (nonatomic,strong) CAShapeLayer * userMaskLayer;
+
+self.userHead.layer.mask  = [self userHeaderMask:self.userHead];
+    
+- (CALayer *)userHeaderMask:(UIView *)originalView{
+    CALayer * userMask = [CALayer layer];
+    userMask.frame = originalView.bounds;
+    
+    CGFloat x = originalView.frame.size.width/2;
+    CGFloat y = originalView.frame.size.height/2;
+    
+    self.userMaskLayer = [CAShapeLayer layer];
+    self.userMaskLayer.bounds = originalView.bounds;
+    self.userMaskLayer.path   = [UIBezierPath bezierPathWithArcCenter:CGPointMake(x, y) radius:50 startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
+    self.userMaskLayer.position  = CGPointMake(50, 50);
+    [userMask addSublayer:self.userMaskLayer];
+    
+    return userMask;
+}
+
+
+
+
+原理：通过设置UIImageView的layer的mask属性。
+
+一般我们都是用
+    self.userHead.layer.cornerRadius = 50;
+    self.userHead.layer.masksToBounds = YES;
+这种方法来设置图片圆角，这样是改变了view的layer属性。
